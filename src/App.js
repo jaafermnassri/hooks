@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import MovieList from "./components/movielist";
+import data from "./data";
+import "./App.css";
+import Add from "./components/add";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Filter from "./components/filter";
 
-function App() {
+const App = () => {
+  const [searchrtg, setSearchtg] = useState(0);
+  const [searchtt, setSearchtt] = useState("");
+  const filterName = (searchtt) => {
+    setSearchtt(searchtt);
+  };
+  const filterRating = (searchrtg) => {
+    setSearchtg(searchrtg);
+  };
+  const [movies, setMovies] = useState(data);
+
+  const handleAdd = (filmjdid) => {
+    setMovies([...movies, { ...filmjdid, _id: movies.length }]);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Filter filterName={filterName} filterRating={filterRating} />
+      <Add handleAdd={handleAdd} />
+
+      <MovieList
+        data={movies.filter(
+          (el) =>
+            el.Title.toLowerCase().includes(searchtt.trim().toLowerCase()) &&
+            el.Rating >= searchrtg
+        )}
+      />
     </div>
   );
-}
+};
 
 export default App;
